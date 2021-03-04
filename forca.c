@@ -74,13 +74,62 @@ void desenhaforca() {
 	printf("\n");
 }
 
+void adicionapalavra() {
+
+	char quer;
+
+	printf("Você quer adicionar uma nova palavra no jogo? (S/N)\n");
+	scanf(" %c", &quer);
+
+	if(quer == 'S') {
+
+		char novaplavra[20];
+		printf("Qual a nova palavra? \n");
+		scanf("%s", novaplavra);
+
+
+		FILE* f;
+
+		f = fopen("palavras.txt", "r+");
+
+		if(f == 0) {
+			printf("Desculpa, não foi possível acessar o banco de palavras secretas!\n");
+		}
+
+		//Ler a quantidade de palavras do arquivo e adiciona mais 1
+		int qtd;
+		fscanf(f, "%d", &qtd);
+		qtd++;
+
+		/*fseek posiciona o ponteiro
+				
+			fseek(aquivo, x, y)
+
+			x = número de bytes que o ponteiro deve "andar"
+			y = constante que indica de onde o ponteiro vai começar a andar
+
+			SEEK_SET indica que ponteiro deve começar a "andar" do começo do aquivo
+			SEEK END indica que deve começar do final do aquivo
+		
+		*/
+
+		fseek(f, 0, SEEK_SET);
+		fprintf(f, "%d", qtd);
+
+		fseek(f, 0, SEEK_END);
+		fprintf(f, "\n%s", novaplavra);
+
+		fclose(f);
+	}
+}
+
 void escolhepalavra() {
 	FILE* f;
 
 	f = fopen("palavras.txt", "r");
 
 	if(f == 0) {
-		printf("Desculpa não foi possível acessar o banco de palavras secretas!\n");
+		printf("Desculpa, não foi possível acessar o banco de palavras secretas!\n");
 		exit(1);
 	}
 
@@ -146,4 +195,6 @@ int main() {
 		chuta();
 
 	} while(!acertou() && !enforcou());
+
+	adicionapalavra();
 }
